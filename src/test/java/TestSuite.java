@@ -27,7 +27,7 @@ public class TestSuite {
         
     }
 
-    @Test
+    @Test @Ignore
     public void guestUser(){
         String url = driver.getCurrentUrl();
         Assert.assertEquals(url, "http://localhost:3000/");
@@ -35,19 +35,13 @@ public class TestSuite {
 
     @Test
     public void openBookAndReadDetails(){
-        WebElement element;
-        List<WebElement> childrenElements;
-
         List<WebElement> bookDescriptionElements;
         WebElement bookDescriptionElement;
         WebElement bookTitleElement;
         WebElement bookDescElement;
         WebElement bookPriceElement;
 
-        element = driver.findElement(By.className("product"));
-        childrenElements = element.findElements(By.tagName("a"));
-        childrenElements.get(0).click();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        getBook(0);
 
         bookTitleElement = driver.findElement(By.tagName("h2"));
         bookDescriptionElement = driver.findElement(By.id("product-description"));
@@ -61,7 +55,7 @@ public class TestSuite {
         Assert.assertTrue(bookPriceElement.getText().contains(Data.BOOK_PRINCE));
     }
 
-    @Test
+    @Test @Ignore
     public void createUserSuccess() {
         List<WebElement> flashNotices;
         List<WebElement> formItens;
@@ -75,7 +69,7 @@ public class TestSuite {
         driver.get("http://localhost:3000/db/seed");
     }
 
-    @Test
+    @Test @Ignore
     public void userLoginSuccess() {
         WebElement form;
         List<WebElement> formItens;
@@ -83,7 +77,7 @@ public class TestSuite {
 
         getAuthItens().get(3).click();
         loginUserAction();
-        
+
         flashNotices = driver.findElements(By.id("flash_notice"));
         Assert.assertEquals(flashNotices.get(1).getText(), Data.USER_LOGIN_SUCCESS);
     }
@@ -123,6 +117,12 @@ public class TestSuite {
         findElementIndexByTag(formItens, 0, "input").sendKeys(Data.USER_LOGIN);
         findElementIndexByTag(formItens, 1, "input").sendKeys(Data.PASSWORD_LOGIN);
         findElementIndexByTag(formItens, 2, "input").click();
+    }
+
+    private void getBook(int index) {
+        WebElement element = driver.findElement(By.className("product"));
+        List<WebElement> childrenElements = element.findElements(By.tagName("a"));
+        childrenElements.get(index).click();
     }
 
 }
