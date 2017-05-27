@@ -14,4 +14,7 @@ public class Data {
     public static final String BOOK_PRINCE = "$23.75";
     public static final String USER_CREATION_SUCCESS = "Thank you for signing up! You are now logged in.";
     public static final String USER_LOGIN_SUCCESS = "Logged in successfully.";
+
+    public static final String ADD_CART_ITEM = "Item added to cart!";
+    public static final String REMOVE_CART_ITEM = "Item removed from cart";
 }

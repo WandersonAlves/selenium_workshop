@@ -27,7 +27,7 @@ public class TestSuite {
         
     }
 
-    @Test @Ignore
+    @Test
     public void guestUser(){
         String url = driver.getCurrentUrl();
         Assert.assertEquals(url, "http://localhost:3000/");
@@ -55,7 +55,7 @@ public class TestSuite {
         Assert.assertTrue(bookPriceElement.getText().contains(Data.BOOK_PRINCE));
     }
 
-    @Test @Ignore
+    @Test
     public void createUserSuccess() {
         List<WebElement> flashNotices;
         List<WebElement> formItens;
@@ -69,7 +69,7 @@ public class TestSuite {
         driver.get("http://localhost:3000/db/seed");
     }
 
-    @Test @Ignore
+    @Test
     public void userLoginSuccess() {
         WebElement form;
         List<WebElement> formItens;
@@ -78,10 +78,29 @@ public class TestSuite {
         getAuthItens().get(3).click();
         loginUserAction();
 
-        flashNotices = driver.findElements(By.id("flash_notice"));
-        Assert.assertEquals(flashNotices.get(1).getText(), Data.USER_LOGIN_SUCCESS);
+        Assert.assertEquals(getFlashNotice().get(1).getText(), Data.USER_LOGIN_SUCCESS);
     }
 
+    @Test
+    public void addBookCart() {
+        addBookAction();
+        Assert.assertEquals(getFlashNotice().get(1).getText(), Data.ADD_CART_ITEM);
+    }
+
+    @Test
+    public void removeBookCart(){
+        addBookAction();
+        removeBookAction();
+        Assert.assertEquals(getFlashNotice().get(1).getText(), Data.REMOVE_CART_ITEM);
+    }
+
+    @Test
+    public void checkoutBookCart() {
+        addBookAction();
+        WebElement form = driver.findElement(By.tagName("form"));
+        List<WebElement> formInputs = form.findElements(By.tagName("input"));
+        formInputs.get(2).click();
+    }
     @After
     public void tearDown(){
         driver.quit();
@@ -123,6 +142,27 @@ public class TestSuite {
         WebElement element = driver.findElement(By.className("product"));
         List<WebElement> childrenElements = element.findElements(By.tagName("a"));
         childrenElements.get(index).click();
+    }
+
+    private void addBookAction() {
+        getAuthItens().get(3).click();
+        loginUserAction();
+        getBook(0);
+        WebElement bookDescriptionElement = driver.findElement(By.id("product-description"));
+        List<WebElement> bookDescriptionElements = bookDescriptionElement.findElements(By.tagName("p"));
+        bookDescriptionElements.get(1).findElement(By.tagName("a")).click();
+    }
+
+    public void removeBookAction() {
+        WebElement table = driver.findElement(By.tagName("tbody"));
+        List<WebElement> trs = table.findElements(By.tagName("tr"));
+        List<WebElement> tds = trs.get(1).findElements(By.tagName("td"));
+        WebElement removeLink = tds.get(2).findElement(By.tagName("a"));
+        removeLink.click();
+    }
+
+    private List<WebElement> getFlashNotice() {
+        return driver.findElements(By.id("flash_notice"));
     }
 
 }
